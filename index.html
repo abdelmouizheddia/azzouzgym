@@ -1198,7 +1198,7 @@ function closeLoginModal() { document.getElementById('loginModal').classList.rem
 // ═════════════════════════════════════════════════════════════════════════════
 // ── الـ URL الخاص بسكربت جوجل ── (ضع الرابط الخاص بك هنا بين علامتي التنصيص)
 // ═════════════════════════════════════════════════════════════════════════════
-const scriptURL = 'https://script.google.com/macros/s/AKfycbwlisf4Lt-sLcSpjd6joLi6JTTX72qT9qEd3jOfuI-fGftxhEAPJf6tmvr7Fgrbte6k/exec';
+const scriptURL = 'https://script.google.com/macros/s/AKfycbwd97HBzVK00ut7Q2SQLkMQOO8b3qGkR6h2OHvehY5ryCCQ9TzQ_ZfMZGfmT9NRe9ow/exec';
 
 // ── 1. عملية إنشاء حساب جديد (Register)
 async function processRegister(event) {
@@ -1213,24 +1213,25 @@ async function processRegister(event) {
 
   regBtn.innerText = "جاري إرسال البيانات..."; regBtn.style.opacity = "0.7";
 
-  try {
-    const response = await fetch(scriptURL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ action: 'register', name: name, phone: phone, email: email, password: password })
-    });
-    const data = await response.json();
-    alert(data.message);
-    if(data.success) {
-      document.getElementById('reg-name').value = ""; document.getElementById('reg-phone').value = "";
-      document.getElementById('reg-email').value = ""; document.getElementById('reg-password').value = "";
-      togglePortalView('login');
-    }
-  } catch (error) {
-    alert("حدث خطأ في الاتصال، يرجى المحاولة لاحقاً.");
-  } finally {
-    regBtn.innerText = "إنشاء حساب جديد"; regBtn.style.opacity = "1";
-  }
+  // في دالة processRegister و processLogin:
+try {
+  const response = await fetch(scriptURL, {
+    method: 'POST',
+    mode: 'cors', // تأكد من وجود هذا السطر
+    headers: { 
+      'Content-Type': 'text/plain;charset=utf-8' 
+    },
+    body: JSON.stringify({ 
+      action: 'register', 
+      name: name, phone: phone, email: email, password: password 
+    })
+  });
+  const data = await response.json();
+  alert(data.message);
+} catch (error) {
+  console.error(error);
+  alert("فشل الاتصال، تأكد من أن الرابط ينتهي بـ /exec");
+}
 }
 
 // ── 2. عملية تسجيل الدخول (Login)
